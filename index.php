@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="icon" href="./img/logo_mini.svg" type="image/x-icon"/>
+    <script
+            src="https://kit.fontawesome.com/0f9536c9fd.js"
+            crossorigin="anonymous"
+    ></script>
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Audiowide"
+    />
+    <title>berberim.com</title>
+</head>
+<body>
+<section class="gray-back" id="gray-back">
+    <div class="account">
+        <div class="account-top">
+            <h2 class="account-name">Hesap İşlemleri</h2>
+            <div id="exit-account"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="account-select">
+            <div id="kayit" class="active-button">Kayıt Ol</div>
+            <div id="giris">Giriş Yap</div>
+            <div id="active"></div>
+        </div>
+        <div class="account-form">
+            <div class="account-forms">
+                <div class="account-form-giris">
+                    <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
+                        <h3 style="margin-left: 0; margin-bottom: 20px; color: #b90cd6">
+                            Giriş Yap
+                        </h3>
+                        <div class="inputBox0">
+                            <input type="email" name="mail" required="required"/>
+                            <span>E-Mail</span>
+                        </div>
+                        <div class="inputBox0">
+                            <input type="password" name="password" required="required"/>
+                            <span>Şİfre</span>
+                        </div>
+                        <input
+                                type="submit"
+                                value="Giriş Yap"
+                                class="fill_button0"
+                                style="cursor: pointer"
+                                name="girisForm"
+                        />
+                    </form>
+                    <?php
+                    session_start();
+                    if (isset($_POST['girisForm'])) {
+                        $email = $_POST['mail'];
+                        $password = $_POST['password'];
+                        $databaseConnection = mysqli_connect("localhost", "root", "", "web_proje");
+                        mysqli_set_charset($databaseConnection, "UTF8");
+                        if (mysqli_connect_errno()) {
+                            echo "Bağlantı Hatası <br />";
+                            echo "Hata Açıklaması : ", mysqli_connect_errno();
+                            die();
+                        }
+
+                        $sql = "SELECT * FROM customers WHERE email='{$email}' AND password = '{$password}'";
+                        $result = $databaseConnection->query($sql);
+                        $row = $result->fetch_array();
+                        $_SESSION['id'] = $row[0];
+                        if ($row) {
+                            header("refresh:0;url=panel.php");
+                        } else {
+                            echo "<script> alert('Giriş Başarısız!')</script>";
+                        }
+                        mysqli_close($databaseConnection);
+                    }
+                    ?>
+                </div>
+                <div class="account-form-kayit">
+                    <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
+                        <h3 style="margin-left: 0; margin-bottom: 20px; color: #0075ff">
+                            Kayıt Ol
+                        </h3>
+                        <div class="inputBox">
+                            <input type="text" name="flname" required="required"/>
+                            <span>Ad - Soyad</span>
+                        </div>
+                        <div class="inputBox">
+                            <input type="email" name="mail" required="required"/>
+                            <span>E-Mail</span>
+                        </div>
+                        <div class="inputBox">
+                            <input type="password" name="password" required="required"/>
+                            <span>Şİfre</span>
+                        </div>
+                        <input
+                                type="submit"
+                                value="Kayıt Ol"
+                                class="fill_button"
+                                style="cursor: pointer"
+                                name="kayitForm"
+                        />
+                    </form>
+                    <?php
+                    if (isset($_POST['kayitForm'])) {
+                        $flname = $_POST["flname"];
+                        $mail = $_POST["mail"];
+                        $password = $_POST["password"];
+
+                        $databaseConnection = mysqli_connect("localhost", "root", "", "web_proje");
+                        mysqli_set_charset($databaseConnection, "UTF8");
+
+                        if (mysqli_connect_errno()) {
+                            echo "Bağlantı Hatası <br />";
+                            echo "Hata Açıklaması : ", mysqli_connect_errno();
+                            die();
+                        }
+                        $ekle = mysqli_query($databaseConnection, "insert into customers (nameLastname,email,password) values ('{$flname}','{$mail}','{$password}')");
+                        if ($ekle) {
+                            echo "<script> alert('Kayıt Başarıyla Eklendi!')</script>";
+                        } else {
+                            echo "Sorgu Hatası";
+                        }
+                        mysqli_close($databaseConnection);
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<main>
+    <section class="page" style="--i: 5">
+        <header>
+            <a href="index.php" class="logo">
+                <img src="./img/logo.svg" alt="berberim.comm"/>
+            </a>
+            <ul>
+                <li><a href="#pageBerberler">Berberler</a></li>
+                <li><a href="#pageHakkimizda">Hakkımızda</a></li>
+                <li><a href="#" class="fill_button" id="kayit-ol">Kayıt Ol</a></li>
+                <li>
+                    <a href="#" class="border_button" id="giris-yap">Giriş Yap</a>
+                </li>
+            </ul>
+        </header>
+        <div class="big-circle" style="--clr: #b90cd6"></div>
+        <div
+                class="circle"
+                style="--t: 10%; --l: 10%; --wh: 120px; --clr: #0075ff"
+        ></div>
+        <div
+                class="circle"
+                style="--t: 14%; --l: 35%; --wh: 40px; --clr: #0075ff"
+        ></div>
+        <div
+                class="circle"
+                style="--t: 23%; --l: 50%; --wh: 90px; --clr: #b90cd6"
+        ></div>
+        <div
+                class="circle"
+                style="--t: 30%; --l: 25%; --wh: 90px; --clr: #0075ff"
+        ></div>
+        <div
+                class="circle"
+                style="--t: 75%; --l: 43%; --wh: 55px; --clr: #0075ff"
+        ></div>
+        <div
+                class="circle"
+                style="--t: 69%; --l: 17%; --wh: 150px; --clr: #b90cd6"
+        ></div>
+        <div
+                class="circle"
+                style="--t: 65%; --l: 35%; --wh: 60px; --clr: #b90cd6"
+        ></div>
+        <div
+                class="circle"
+                style="--t: 45%; --l: 65%; --wh: 92px; --clr: #0075ff"
+        ></div>
+        <div
+                class="circle"
+                style="--t: 15%; --l: 70%; --wh: 122px; --clr: #0075ff"
+        ></div>
+        <div
+                class="circle"
+                style="--t: 30%; --l: 86%; --wh: 82px; --clr: #b90cd6"
+        ></div>
+        <div
+                class="circle"
+                style="--t: 71%; --l: 88%; --wh: 138px; --clr: #0075ff"
+        ></div>
+        <div
+                class="circle"
+                style="--t: 71%; --l: 72%; --wh: 153px; --clr: #b90cd6"
+        ></div>
+        <span class="main_logo">
+          <svg
+                  id="Layer_1"
+                  data-name="Layer 1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 2000 207"
+                  class="logo_svg"
+          >
+            <defs>
+              <style>
+                .cls-1,
+                .cls-2 {
+                    fill: none;
+                    stroke-miterlimit: 10;
+                }
+
+                .cls-1 {
+                    stroke: #b90cd6;
+                    stroke-width: 5px;
+                }
+
+                .cls-2 {
+                    stroke: #0075ff;
+                    stroke-width: 5px;
+                }
+              </style>
+            </defs>
+            <path
+                    class="cls-1"
+                    d="M81.79,192.47a60.14,60.14,0,0,1-19.74-2.94,46.84,46.84,0,0,1-15.28-8.81l-1.88,9.4H12V31.7H49.83V83.88a51.1,51.1,0,0,1,14.34-5.64,71.72,71.72,0,0,1,16.45-1.88q24.43,0,38.55,13.51t14.1,43.6q0,30.09-13.87,44.54T81.79,192.47ZM71,165q12.69,0,18.22-7.64t5.52-23.62q0-16.46-5.76-23t-18-6.58q-13.4,0-21.15,7.06v45.36Q58.29,165,71,165Z"
+            />
+            <path
+                    class="cls-1"
+                    d="M212.24,192.47q-29.15,0-46.77-14.46t-17.63-43.6q0-26.55,14.57-42.3t43.72-15.75q26.55,0,41.13,13.63t14.57,36.67v20h-79q2.58,11,12.1,15.39t26,4.35a109.18,109.18,0,0,0,18.68-1.65,76.87,76.87,0,0,0,15.87-4.23v24.68a71.18,71.18,0,0,1-19,5.53A154.83,154.83,0,0,1,212.24,192.47Zm-29.38-67.69h46.07v-4.94q0-8.22-4.94-13T207.3,102q-13.63,0-19,5.52T182.86,124.78Z"
+            />
+            <path
+                    class="cls-1"
+                    d="M281.1,190.12V78.71h36l1.17,10.34a90,90,0,0,1,18.1-8.11A92.66,92.66,0,0,1,358,76.36V104.8q-6.1.7-13.51,2.23a142.1,142.1,0,0,0-14.1,3.64,79.18,79.18,0,0,0-11.4,4.47v75Z"
+            />
+            <path
+                    class="cls-1"
+                    d="M442.1,192.47a60.14,60.14,0,0,1-19.74-2.94,46.84,46.84,0,0,1-15.28-8.81l-1.88,9.4H372.3V31.7h37.84V83.88a51.1,51.1,0,0,1,14.34-5.64,71.72,71.72,0,0,1,16.45-1.88q24.44,0,38.55,13.51t14.1,43.6q0,30.09-13.87,44.54T442.1,192.47ZM431.29,165q12.69,0,18.22-7.64T455,133.71q0-16.46-5.76-23t-18-6.58q-13.4,0-21.15,7.06v45.36Q418.6,165,431.29,165Z"
+            />
+            <path
+                    class="cls-1"
+                    d="M572.55,192.47q-29.14,0-46.77-14.46t-17.63-43.6q0-26.55,14.57-42.3t43.72-15.75Q593,76.36,607.57,90t14.57,36.67v20h-79q2.58,11,12.1,15.39t26,4.35a109.18,109.18,0,0,0,18.68-1.65,76.87,76.87,0,0,0,15.87-4.23v24.68a71.18,71.18,0,0,1-19,5.53A154.83,154.83,0,0,1,572.55,192.47Zm-29.38-67.69h46.07v-4.94q0-8.22-4.94-13T567.61,102q-13.64,0-19,5.52T543.17,124.78Z"
+            />
+            <path
+                    class="cls-1"
+                    d="M641.42,190.12V78.71h36l1.17,10.34a90,90,0,0,1,18.1-8.11,92.66,92.66,0,0,1,21.62-4.58V104.8q-6.1.7-13.51,2.23a142.1,142.1,0,0,0-14.1,3.64,79.18,79.18,0,0,0-11.4,4.47v75Z"
+            />
+            <path
+                    class="cls-1"
+                    d="M743.18,190.12V106.68H726.73l3.29-28h51V190.12Zm-3-129V32.64h41.13V61.08Z"
+            />
+            <path
+                    class="cls-1"
+                    d="M805.23,190.12V78.71h35l1.18,9.87a69.16,69.16,0,0,1,16.92-8.81,58.94,58.94,0,0,1,20.21-3.41q11.3,0,17.63,3.41a24.52,24.52,0,0,1,9.87,9.52A73.33,73.33,0,0,1,923.57,80q9.76-3.65,22.92-3.64,19.51,0,28.68,10.11t9.16,30.79v72.86H947v-68.4q0-9.16-3.88-13.28c-2.58-2.74-6.78-4.11-12.57-4.11a26.41,26.41,0,0,0-10.58,2.23,24.15,24.15,0,0,0-8.69,6.23,39.32,39.32,0,0,1,.58,4.94q.12,2.34.12,5.64v66.75H876.68V121.25q0-8.46-2.93-12.69t-11.17-4.23a21.37,21.37,0,0,0-11,3,52.46,52.46,0,0,0-9.41,7.06v75.68Z"
+            />
+            <path
+                    class="cls-1"
+                    d="M1110.78,192.47q-29.85,0-46.65-14.57t-16.81-43.49q0-29.37,17.51-43.71t46.66-14.34a113.08,113.08,0,0,1,21.27,1.76,74.42,74.42,0,0,1,17.51,5.76v26.79q-13.17-6.35-30.79-6.34-16.45,0-25,6.58t-8.58,23.5q0,15.75,8,22.92t25.38,7.17a68.91,68.91,0,0,0,31.26-7.05v28a75.16,75.16,0,0,1-18.21,5.4A129.51,129.51,0,0,1,1110.78,192.47Z"
+            />
+            <path
+                    class="cls-1"
+                    d="M1227.83,192.47q-32.2,0-47.48-14.93t-15.28-43.13q0-28,15.4-43t47.36-15q32.19,0,47.59,15t15.4,43q0,28.22-15.28,43.13T1227.83,192.47Zm0-29.62q13.15,0,18.8-6.58t5.64-21.86q0-15.27-5.64-21.85t-18.8-6.59q-12.93,0-18.57,6.59t-5.64,21.85q0,15.28,5.64,21.86T1227.83,162.85Z"
+            />
+            <path
+                    class="cls-1"
+                    d="M1310.09,190.12V78.71h35l1.18,9.87a69.16,69.16,0,0,1,16.92-8.81,58.86,58.86,0,0,1,20.21-3.41q11.28,0,17.63,3.41a24.52,24.52,0,0,1,9.87,9.52A73.14,73.14,0,0,1,1428.43,80q9.75-3.65,22.92-3.64,19.5,0,28.67,10.11t9.17,30.79v72.86h-37.37v-68.4q0-9.16-3.88-13.28t-12.58-4.11a26.37,26.37,0,0,0-10.57,2.23,24.27,24.27,0,0,0-8.7,6.23,39.41,39.41,0,0,1,.59,4.94q.12,2.34.12,5.64v66.75h-35.26V121.25q0-8.46-2.94-12.69t-11.16-4.23a21.43,21.43,0,0,0-11,3,52.39,52.39,0,0,0-9.4,7.06v75.68Z"
+            />
+            <circle class="cls-2" cx="1017.59" cy="176.25" r="15"/></svg
+          ><span class="later-text">'a<br/> </span>
+          <span class="welcome-text"> HOŞGELDİNİZ </span>
+        </span>
+    </section>
+    <section class="page" id="pageBerberler" style="--i: 4">
+        <h2 class="main-baslik">Başlıca Kuaförlerimiz</h2>
+        <h3 class="main-alt-metin">
+            Şuan da berberim.com sayfasındaki en popüler 8 berber.
+        </h3>
+        <section class="berber-list">
+            <?php
+            $databaseConnection = mysqli_connect("localhost", "root", "", "web_proje");
+            mysqli_set_charset($databaseConnection, "UTF8");
+            if (mysqli_connect_errno()) {
+                echo "Bağlantı Hatası <br />";
+                echo "Hata Açıklaması : ", mysqli_connect_errno();
+                die();
+            }
+            $sql = "SELECT * FROM barbers";
+
+            $result = $databaseConnection->query($sql);
+            $row = $result->fetch_array();
+            foreach ($result as $row): ?>
+            <div class="berberler">
+                <img src="<?= $row['resim'] ?>" alt="berber"/>
+                <div class="blur">
+                    <p class="name"><?= $row['name'] ?></p>
+                    <p class="name"><?= $row['storeName'] ?></p>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </section>
+    </section>
+    <section class="page" id="pageHakkimizda" style="--i: 3">
+        <div class="main-bilgiler">
+            <div class="main-bilgi">
+                <img src="img/Barber.png" alt="Barber" class="main-resim"/>
+                <div class="main-metin">
+                    <h2>
+                        Kendi berberini bul, randevunu al ve istediğin kesimi elde et
+                    </h2>
+                    <br/>
+                    <p>
+                        berberim.com’da istediğiniz saç kesimini yapıcak yüzlerce berber
+                        arasından istediğinizi seçin ve o sırada randevu verebileceği
+                        gün ve saati seçerek istediğiniz berberbere istediğiniz zamanda
+                        tek tıkla randevu alın.
+                    </p>
+                </div>
+            </div>
+            <div class="main-bilgi">
+                <div class="main-metin">
+                    <h2>Sadece tek tıkla berberim.com’dan randevu al</h2>
+                    <br/>
+                    <p>
+                        İstendiğiniz yerde ve zamanda tek bir dokunuş ile saç kesiminizi
+                        istediğiniz berbere yaptırabilirsiniz.
+                    </p>
+                </div>
+                <img src="img/hand_phone.png" alt="Barber" class="main-resim"/>
+            </div>
+        </div>
+    </section>
+    <footer class="footer page">
+        © Copyright 2022 - Works Copyright - All rights reserved
+    </footer>
+</main>
+
+<script src="node_modules/animejs/lib/anime.min.js"></script>
+<script>
+    function randomValues() {
+        anime({
+            targets: ".circle",
+            translateY: function () {
+                return anime.random(-50, 100);
+            },
+            duration: function () {
+                return anime.random(1000, 3000);
+            },
+            easing: "easeInOutSine",
+            delay: function () {
+                return anime.random(100, 1000);
+            },
+            complete: randomValues,
+        });
+    }
+
+    randomValues();
+    let accountSelectKayitDOM = document.querySelector("#kayit");
+    accountSelectKayitDOM.addEventListener("click", function () {
+        anime({
+            targets: "#active",
+            background: "#0075ff",
+            translateX: 0,
+            duration: 1000,
+            easing: "easeInOutBack",
+        });
+        anime({
+            targets: ".account-forms",
+            translateX: "-50%",
+            duration: 1000,
+            easing: "easeInOutBack",
+        });
+        anime({
+            targets: ".account-name,#exit-account",
+            color: "#0075ff",
+            duration: 1000,
+            easing: "easeInOutSine",
+        });
+    });
+    let accountSelectgirisDOM = document.querySelector("#giris");
+    accountSelectgirisDOM.addEventListener("click", function () {
+        anime({
+            targets: "#active",
+            translateX: "100%",
+            background: "#b90cd6",
+            duration: 1000,
+            easing: "easeInOutBack",
+        });
+        anime({
+            targets: ".account-forms",
+            translateX: 0,
+            duration: 1000,
+            easing: "easeInOutBack",
+        });
+        anime({
+            targets: ".account-name,#exit-account",
+            color: "#b90cd6",
+            duration: 1000,
+            easing: "easeInOutSine",
+        });
+    });
+    let girisYapDOM = document.querySelector("#giris-yap");
+    girisYapDOM.addEventListener("click", function () {
+        anime({
+            targets: ".gray-back",
+            scale: 1,
+            duration: 0,
+        });
+        anime({
+            targets: "#active",
+            translateX: "100%",
+            background: "#b90cd6",
+            duration: 0,
+        });
+        anime({
+            targets: ".account-forms",
+            translateX: 0,
+            duration: 0,
+        });
+        anime({
+            targets: ".account-name,#exit-account",
+            color: "#b90cd6",
+            duration: 0,
+        });
+    });
+    let kayitOlDOM = document.querySelector("#kayit-ol");
+    kayitOlDOM.addEventListener("click", function () {
+        anime({
+            targets: ".gray-back",
+            scale: 1,
+            duration: 0,
+        });
+        anime({
+            targets: "#active",
+            translateX: 0,
+            background: "#0075ff",
+            duration: 0,
+        });
+        anime({
+            targets: ".account-forms",
+            translateX: "-50%",
+            duration: 0,
+        });
+        anime({
+            targets: ".account-name,#exit-account",
+            color: "#0075ff",
+            duration: 0,
+        });
+    });
+    let exitAccountDOM = document.querySelector("#exit-account");
+    exitAccountDOM.addEventListener("click", function () {
+        anime({
+            targets: ".gray-back",
+            scale: 0,
+            duration: 0,
+        });
+    });
+    anime({
+        targets: ".cls-1, .cls-2",
+        strokeDashoffset: [anime.setDashoffset, 0],
+        easing: "easeInOutSine",
+        duration: 1000,
+        delay: function (el, i) {
+            return i * 100;
+        },
+        direction: "alternate",
+        loop: false,
+    });
+    anime({
+        targets: ".later-text, .welcome-text",
+        opacity: 1,
+        direction: "alternate",
+        loop: false,
+        easing: "easeInOutSine",
+        duration: 1000,
+        delay: 1500,
+    });
+</script>
+</body>
+</html>
